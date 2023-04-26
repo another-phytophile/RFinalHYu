@@ -49,30 +49,9 @@ House <- rawhouse %>%
 Now print out the first 10 observations and first 6 variables of House. 
 
 ```{r kable}
-colnames(House) <- c("Sale\nPrice",
-                     "Bsmt\nUnfSF",
-                     "Overall\nQual",
-                     "Open\nPorchSF",
-                     "Bedroom\nAbvGr",
-                     "Yr\nSold"
-)
-  
-  
-#  str_split_fixed(colnames(House), " ", 10) %>%
-#                  apply(2, function(x) linebreak(str_c(x, collapse = " "))
-#                        )
-
-kableExtra::kable(
-  head(House, 10),
-  colnames( c( "SalePrice",
-               "BsmtUnfSF",
-               "OverallQual",
-               "OpenPorchSF",
-               "BedroomAbvGr",
-               "YrSold"))
-)
-#%>% 
-#  column_spec(1:ncol(House), width = "auto")
-#help(kable)
+House %>% 
+  select(SalePrice, BsmtUnfSF, OverallQual, OpenPorchSF, BedroomAbvGr, YrSold) %>% 
+  slice(1:10) %>% 
+  kable()
 ```
 
