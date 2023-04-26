@@ -1,20 +1,11 @@
 ---
 title: "RFinalHYu"
 author: "Haozhe (Jerry) Yu"
-date: "`r Sys.Date()`"
+date: "2023-04-26"
 output: pdf_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE,eval=TRUE)
-library(dplyr)
-library(tidyr)
-library(readxl)
-library(here)
-library(purrr)
-library(ggplot2)
-library(kableExtra)
-```
+
 
 ## Data Import
 
@@ -22,7 +13,8 @@ library(kableExtra)
 
 Read in the raw data directly form the url. 
 
-```{r rawdata}
+
+```r
 rawhouse <- read.csv("https://www4.stat.ncsu.edu/~online/ST308/Data/hyu23_house.csv")
 ```
 
@@ -38,7 +30,8 @@ Create a tibble from the read in data table with the following modifications:
 
 3. The `GarageArea` and `MSZoning` variables are removed
 
-```{r tibblemade}
+
+```r
 House <- rawhouse %>%  
          filter(SaleType != "Other") %>% 
          filter(BedroomAbvGr > 2) %>% 
@@ -48,7 +41,8 @@ House <- rawhouse %>%
 
 Now print out the first 10 observations and first 6 variables of House. 
 
-```{r kable}
+
+```r
 colnames(House) <- c("Sale\nPrice",
                      "Bsmt\nUnfSF",
                      "Overall\nQual",
@@ -71,6 +65,42 @@ kableExtra::kable(
                "BedroomAbvGr",
                "YrSold"))
 )
+```
+
+
+\begin{tabular}{r|r|r|r|r|r|l|l|l|l|l|r}
+\hline
+Sale
+Price & Bsmt
+UnfSF & Overall
+Qual & Open
+PorchSF & Bedroom
+AbvGr & Yr
+Sold & NA & NA & NA & NA & NA & NA\\
+\hline
+208500 & 150 & 7 & 61 & 3 & 2008 & TA & Unf & Reg & TA & WD & 2.085\\
+\hline
+181500 & 284 & 6 & 0 & 3 & 2007 & TA & Unf & Reg & TA & WD & 1.815\\
+\hline
+223500 & 434 & 7 & 42 & 3 & 2008 & TA & Unf & IR1 & TA & WD & 2.235\\
+\hline
+140000 & 540 & 7 & 35 & 3 & 2006 & Gd & Unf & IR1 & TA & WD & 1.400\\
+\hline
+250000 & 490 & 8 & 84 & 4 & 2008 & TA & Unf & IR1 & TA & WD & 2.500\\
+\hline
+307000 & 317 & 8 & 57 & 3 & 2007 & TA & Unf & Reg & TA & WD & 3.070\\
+\hline
+200000 & 216 & 7 & 204 & 3 & 2009 & TA & Other & IR1 & TA & WD & 2.000\\
+\hline
+279500 & 1494 & 7 & 33 & 3 & 2007 & TA & Unf & IR1 & TA & New & 2.795\\
+\hline
+159000 & 468 & 5 & 102 & 3 & 2008 & TA & Unf & Reg & TA & WD & 1.590\\
+\hline
+139000 & 525 & 5 & 0 & 3 & 2009 & TA & Unf & Reg & TA & COD & 1.390\\
+\hline
+\end{tabular}
+
+```r
 #%>% 
 #  column_spec(1:ncol(House), width = "auto")
 #help(kable)
