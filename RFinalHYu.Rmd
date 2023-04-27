@@ -54,4 +54,17 @@ House %>%
   slice(1:10) %>% 
   kable()
 ```
+## Output Creation Steps
+
+### Contingency Tables
+
+Create a 2 way contingency table between `BsmtFinType2` and `LotShap`.
+
+```{r contingency}
+contingency <- table(House$BsmtFinType2,
+      House$LotShap)
+contingency
+```
+The upper most value of `r contingency[1,1]` is the number of observations where `BsmtFinType2` equals "Other" and `LotShap`  euqlas "IR1". 
+
 
