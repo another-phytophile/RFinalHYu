@@ -65,6 +65,82 @@ contingency <- table(House$BsmtFinType2,
       House$LotShap)
 contingency
 ```
-The upper most value of `r contingency[1,1]` is the number of observations where `BsmtFinType2` equals "Other" and `LotShap`  euqlas "IR1". 
+The upper most value of `r contingency[1,1]` is the number of observations where `BsmtFinType2` equals "Other" and `LotShap`  equals "IR1". 
 
+### Numeric Summaries
+
+Create the tibble `ssatshouse` storing the following summary statistics:
+
+1. sample meal
+2. sample standard deviation
+3. sample 1st quartile
+4. sample 3rd quartile
+
+For the following variables: 
+
+1. SalePrice
+2. BsmtUnfSF
+3. OverallQual
+
+At every level of the `BsmtCond` variable. Then use `kable()` to print out `ssatshouse`.
+
+```{r summaries}
+ssatshouse <- House %>% 
+              group_by(BsmtCond) %>% 
+              reframe(
+                across(c(SalePrice,BsmtUnfSF,OverallQual),
+                       list(mean = ~mean(., na.rm = TRUE), 
+                            sd = ~sd(., na.rm = TRUE),
+                            q1 = ~quantile(., 0.25, na.rm = TRUE),
+                            q3 = ~quantile(., 0.75, na.rm = TRUE)
+                            ),
+                       .names = "{col}_{fn}"
+                      )
+                     )
+
+kable(ssatshouse)
+```
+
+### Scatterplots
+
+Create a scatter plot using `SalePrice` on the y-axis and `BsmtUnfSF` on the x-axis. Color the points by the `BsmtCond` variable.
+
+```{r scatter}
+scatter <- ggplot(data=House, aes(x = BsmtUnfSF, y = SalePrice, color=BsmtCond)) +
+  geom_point()
+scatter
+```
+There seems to be a weak positive correlation between `SalePrice` and `BsmtUnfSF`, a code of "gd' seemed to positively correlate sale price, while a code of "other seemed to negatively correlate with sale price.
+
+### Panel Scatter
+
+Create the same plot as above at every level of the `LotShape` variable.
+```{r panel}
+scatterfacet <- ggplot(data=House, aes(x = BsmtUnfSF, y = SalePrice, color=BsmtCond)) +
+  geom_point() + 
+  facet_wrap(~LotShape)
+scatterfacet
+```
+
+## Regression
+
+Create a multiple linear regression between `SalePrice` as the response variable and `BsmtUnfSF` and `OverallQual` as predictors, sans interactions. The do the following things with the model: 
+1.) Inspect the `summary()` of the model discuss if any parameters are significant
+2.) USe `predict()` to predict a future SalePrice at two different combinations of `BsmtUnfSF` and `OverallQual`.
+
+```{r multiple regression}
+#create multiple linear regression model
+mlrhouse <- lm(SalePrice ~ BsmtUnfSF + OverallQual, data=House)
+
+#structure
+summary(mlrhouse)
+
+#predict
+housepredict <- data.frame(BsmtUnfSF = c(787, 80), OverallQual = c(7, 8))
+predictionshouse <- predict(mlrhouse, housepredict)
+```
+
+In the multiple regression model, the p value for `BsmtUnfSF` was 0.703, meaning that it was not significant at a standard alpha of p<0.05, while the p value for `OverallQual` was <2e-16, meaning that it was highly significant at a standard alpha of p<0.05.
+
+For my 2 values, the first data point had `BsmtUnfSF`= `r housepredict[1,1]` and `OverallQual` = `r housepredict[1,2]`, while the second had `BsmtUnfSF`= `r housepredict[2,1]` and `OverallQual` = `r housepredict[2,2]`. The predicted values were `r predictionshouse[1]` and `r predictionshouse[2]`, respectively. 
 
